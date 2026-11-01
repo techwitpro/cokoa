@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --font-ranchers: var(--font-ranchers), cursive;
+  --font-nunito: var(--font-nunito), sans-serif;
+  
+  --color-brand-dark: #100B14;
+  --color-brand-purple: #632C91;
+  --color-brand-purple-dark: #672A8E;
+  --color-brand-yellow: #F9A70A;
+  --color-brand-lime: #D3F36A;
+  --color-brand-soft-purple: #F6E8FA;
+  --color-brand-lavender: #EFACF9;
+  --color-brand-cream: #FFEFCB;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-nunito), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #100B14;
+}
+
+.font-ranchers {
+  font-family: var(--font-ranchers), 'Ranchers', cursive;
+}
+
+.font-nunito {
+  font-family: var(--font-nunito), 'Nunito', sans-serif;
+}
+
+/* Accessibility: High contrast keyboard focus indicators */
+*:focus-visible {
+  outline: 2px solid #F9A70A;
+  outline-offset: 2px;
+}
+
+/* Retro Neo-brutalist Shadows matching Figma specs */
+.shadow-retro-dark {
+  box-shadow: 2px 2px 0px 0px #100B14;
+}
+
+.shadow-retro-dark-lg {
+  box-shadow: 4px 4px 0px 0px #100B14;
+}
+
+.shadow-retro-yellow {
+  box-shadow: 2px 2px 0px 0px #F9A70A;
+}
+
+.shadow-retro-white {
+  box-shadow: 2px 2px 0px 0px #FFFFFF;
+}
+
+/* Infinite Marquee Track */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+    overflow-x: auto;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom scrollbar hiding */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

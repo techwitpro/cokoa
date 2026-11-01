@@ -1,0 +1,372 @@
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { X, Award, Heart, Utensils } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+export default function AboutSection() {
+  const [showStoryModal, setShowStoryModal] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const pill1Ref = useRef<HTMLSpanElement>(null);
+  const pill2Ref = useRef<HTMLSpanElement>(null);
+  const dividerTopRef = useRef<HTMLDivElement>(null);
+  const dividerBottomRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const capsule0Ref = useRef<HTMLDivElement>(null);
+  const capsule1Ref = useRef<HTMLDivElement>(null);
+  const capsule2Ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowStoryModal(false);
+      }
+    };
+    if (showStoryModal) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showStoryModal]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      // 1. Heading & Inline Image Pills Reveal
+      const headTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 92%",
+          once: true,
+        },
+      });
+
+      headTl
+        .fromTo(
+          headingRef.current,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.65, ease: "power3.out" }
+        )
+        .fromTo(
+          [pill1Ref.current, pill2Ref.current],
+          { scale: 0, rotation: -10, opacity: 0 },
+          { scale: 1, rotation: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: "back.out(2.0)" },
+          "-=0.4"
+        )
+        .fromTo(
+          [dividerTopRef.current, dividerBottomRef.current],
+          { scaleX: 0, opacity: 0 },
+          { scaleX: 1, opacity: 1, duration: 0.5, stagger: 0.06, ease: "power2.out" },
+          "-=0.25"
+        )
+        .fromTo(
+          buttonRef.current,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" },
+          "-=0.2"
+        );
+
+      // 2. 3 Arched Capsules Playful Spring Entrance
+      if (capsule0Ref.current && capsule1Ref.current && capsule2Ref.current) {
+        gsap.fromTo(
+          capsule0Ref.current,
+          { y: 45, opacity: 0, rotateZ: -2.5, scale: 0.95 },
+          {
+            scrollTrigger: {
+              trigger: capsule0Ref.current,
+              start: "top 92%",
+              once: true,
+            },
+            y: 0,
+            opacity: 1,
+            rotateZ: 0,
+            scale: 1,
+            duration: 0.75,
+            ease: "back.out(1.5)",
+          }
+        );
+
+        gsap.fromTo(
+          capsule1Ref.current,
+          { y: 50, opacity: 0, scale: 0.93 },
+          {
+            scrollTrigger: {
+              trigger: capsule1Ref.current,
+              start: "top 92%",
+              once: true,
+            },
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.75,
+            delay: 0.08,
+            ease: "back.out(1.6)",
+          }
+        );
+
+        gsap.fromTo(
+          capsule2Ref.current,
+          { y: 45, opacity: 0, rotateZ: 2.5, scale: 0.95 },
+          {
+            scrollTrigger: {
+              trigger: capsule2Ref.current,
+              start: "top 92%",
+              once: true,
+            },
+            y: 0,
+            opacity: 1,
+            rotateZ: 0,
+            scale: 1,
+            duration: 0.75,
+            delay: 0.16,
+            ease: "back.out(1.5)",
+          }
+        );
+        // Scroll-linked subtle parallax depth scrub across the arches
+        gsap.to([capsule0Ref.current, capsule2Ref.current], {
+          scrollTrigger: {
+            trigger: capsule1Ref.current,
+            start: "top 80%",
+            end: "bottom 20%",
+            scrub: 1.0,
+          },
+          y: -25,
+          ease: "none",
+        });
+
+        gsap.to(capsule1Ref.current, {
+          scrollTrigger: {
+            trigger: capsule1Ref.current,
+            start: "top 80%",
+            end: "bottom 20%",
+            scrub: 1.2,
+          },
+          y: -45,
+          ease: "none",
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const images = [
+    {
+      ref: capsule0Ref,
+      src: "/images/about_image_1_6668_468-3a9639.png",
+      alt: "Chef delicately plating handmade fresh pasta at COKOA",
+      caption: "Handmade Artisanal Pasta",
+    },
+    {
+      ref: capsule1Ref,
+      src: "/images/about_image_2_6668_469.png",
+      alt: "Culinary chef finishing signature grilled burger with fresh garnish",
+      caption: "Culinary Passion & Craft",
+    },
+    {
+      ref: capsule2Ref,
+      src: "/images/about_image_3_6668_470.png",
+      alt: "Dining room atmosphere with table wine and cozy evening seating",
+      caption: "Inviting Dining Space",
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      id="about"
+      aria-label="About COKOA"
+      className="relative w-full bg-white pt-20 md:pt-28 pb-16 md:pb-24 overflow-hidden"
+    >
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col items-center">
+        {/* Main Heading with Inline Image Pills matching Figma */}
+        <div className="max-w-[840px] text-center flex flex-col items-center gap-6">
+          <h2
+            ref={headingRef}
+            className="font-ranchers text-[#100B14] text-4xl sm:text-5xl md:text-[64px] leading-[1.2] tracking-[0.0313em] uppercase flex flex-col items-center justify-center gap-y-2 will-change-transform"
+          >
+            <span className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+              <span>Where</span>
+              <span
+                ref={pill1Ref}
+                aria-hidden="true"
+                className="inline-flex items-center justify-center w-14 sm:w-20 h-10 sm:h-14 rounded-[24px] overflow-hidden border border-[#100B14]/20 shadow-sm mx-1 align-middle select-none origin-center will-change-transform"
+              >
+                <Image
+                  src="/images/title_capsule_6668_425.png"
+                  alt=""
+                  width={80}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
+              </span>
+              <span>Great Food</span>
+            </span>
+            <span className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+              <span>Brings People</span>
+              <span
+                ref={pill2Ref}
+                aria-hidden="true"
+                className="inline-flex items-center justify-center w-14 sm:w-20 h-10 sm:h-14 rounded-[24px] overflow-hidden border border-[#100B14]/20 shadow-sm mx-1 align-middle select-none origin-center will-change-transform"
+              >
+                <Image
+                  src="/images/title_capsule_6668_429.png"
+                  alt=""
+                  width={80}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
+              </span>
+              <span>Together</span>
+            </span>
+          </h2>
+
+          {/* Subtitle */}
+          <p className="font-nunito text-[#100B14] text-lg sm:text-xl leading-relaxed text-center max-w-[680px]">
+            Enjoy chef-crafted flavors, warm hospitality, and an inviting atmosphere made for unforgettable dining moments.
+          </p>
+
+          {/* Service Hours Bar with Decorative Dividers */}
+          <div className="w-full max-w-[640px] mt-2 flex flex-col items-center gap-3">
+            <div ref={dividerTopRef} className="w-full flex justify-center origin-center will-change-transform" aria-hidden="true">
+              <Image
+                src="/images/text_input_6668_435.svg"
+                alt=""
+                width={640}
+                height={2}
+                className="w-full h-auto object-contain"
+              />
+            </div>
+            <p className="font-ranchers text-[#100B14] text-xl sm:text-2xl md:text-[24px] tracking-[0.0833em] uppercase py-1 select-none">
+              Daily Service · 11:30 AM — 11:30 PM
+            </p>
+            <div ref={dividerBottomRef} className="w-full flex justify-center origin-center will-change-transform" aria-hidden="true">
+              <Image
+                src="/images/text_input_6668_440.svg"
+                alt=""
+                width={640}
+                height={2}
+                className="w-full h-auto object-contain"
+              />
+            </div>
+          </div>
+
+          {/* About Us Button */}
+          <div ref={buttonRef} className="mt-4">
+            <button
+              onClick={() => setShowStoryModal(true)}
+              aria-haspopup="dialog"
+              aria-expanded={showStoryModal}
+              className="flex items-center gap-2.5 bg-white text-[#110F12] font-nunito font-bold text-base uppercase tracking-wider px-7 py-3 rounded-full border-2 border-[#100B14] shadow-retro-dark hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#100B14]"
+            >
+              <span>About us</span>
+              <Image
+                src="/images/right_arrow_6668_464.svg"
+                alt=""
+                aria-hidden="true"
+                width={18}
+                height={14}
+                className="w-4 h-3.5 object-contain"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 3 Arched Pill Images Gallery spanning full viewport width edge-to-edge matching Figma (Container #6668:466 & #6668:467 at x=-349px) */}
+      <div className="w-full mt-16 md:mt-24 overflow-hidden">
+        <div className="w-screen relative left-1/2 -translate-x-1/2 flex items-center justify-center">
+          <div className="flex items-center justify-center min-w-[1100px] lg:min-w-[1860px] flex-shrink-0">
+            {images.map((img, idx) => (
+              <div
+                key={idx}
+                ref={img.ref}
+                className="flex-shrink-0 will-change-transform"
+              >
+                <div className="group relative w-[360px] sm:w-[460px] md:w-[540px] lg:w-[620px] h-[520px] sm:h-[620px] md:h-[690px] lg:h-[740px] rounded-[680px] overflow-hidden border-2 border-[#100B14]/15 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    sizes="(max-width: 768px) 460px, 620px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  {/* Floating caption on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-12 px-6">
+                    <span className="font-nunito font-bold text-white text-base sm:text-lg bg-[#100B14]/85 px-5 py-2 rounded-full backdrop-blur-sm border border-white/20 shadow-md">
+                      {img.caption}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* About Us Story Modal */}
+      {showStoryModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="about-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
+          <div
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+            onClick={() => setShowStoryModal(false)}
+            aria-hidden="true"
+          />
+          <div className="relative z-10 w-full max-w-2xl bg-white rounded-3xl p-8 shadow-2xl border-2 border-[#100B14] max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowStoryModal(false)}
+              aria-label="Close story modal"
+              className="absolute top-6 right-6 w-10 h-10 rounded-full bg-[#100B14]/5 hover:bg-[#100B14] hover:text-white flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#100B14]"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <span className="inline-block px-3.5 py-1 rounded-full bg-[#F6E8FA] text-[#632C91] font-nunito font-bold text-xs uppercase tracking-wider mb-3">
+              Our Heritage & Philosophy
+            </span>
+            <h3 id="about-modal-title" className="font-ranchers text-3xl sm:text-4xl text-[#100B14] mb-4">
+              Crafting Unforgettable Flavors Since 2018
+            </h3>
+
+            <div className="space-y-4 font-nunito text-[#100B14]/80 text-base leading-relaxed">
+              <p>
+                At COKOA, dining is a shared ritual of warmth, laughter, and sensorial discovery.
+                From our open-fire ovens to handmade pasta pressed fresh each dawn, our culinary team sources locally and crafts passionately.
+              </p>
+              <p>
+                Every recipe is an homage to classic comfort elevated by modern European flair. Whether you are gathering for an intimate anniversary, an upbeat acoustic jazz evening, or a sunlit weekend brunch with friends, our table is always set for you.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-100">
+              <div className="text-center p-3 rounded-2xl bg-[#FFEFCB]/50">
+                <Utensils className="w-6 h-6 text-[#F9A70A] mx-auto mb-1" aria-hidden="true" />
+                <p className="font-ranchers text-2xl text-[#100B14]">100%</p>
+                <p className="font-nunito text-xs text-gray-600">Fresh Local Ingredients</p>
+              </div>
+              <div className="text-center p-3 rounded-2xl bg-[#F6E8FA]/50">
+                <Heart className="w-6 h-6 text-[#632C91] mx-auto mb-1" aria-hidden="true" />
+                <p className="font-ranchers text-2xl text-[#100B14]">4.9 ★</p>
+                <p className="font-nunito text-xs text-gray-600">Over 3,000+ Reviews</p>
+              </div>
+              <div className="text-center p-3 rounded-2xl bg-[#D3F36A]/20">
+                <Award className="w-6 h-6 text-[#100B14] mx-auto mb-1" aria-hidden="true" />
+                <p className="font-ranchers text-2xl text-[#100B14]">2024</p>
+                <p className="font-nunito text-xs text-gray-600">Culinary Excellence</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
