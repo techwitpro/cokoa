@@ -26,19 +26,21 @@ export default function TickerSection() {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
 
-    // Playful scroll-linked acceleration on the marquee
+    // Playful velocity-reactive kinetic skew on the continuous marquee track
     if (trackRef.current && sectionRef.current) {
       const scrollTrigger = ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top bottom",
         end: "bottom top",
         onUpdate: (self) => {
-          const velocity = Math.abs(self.getVelocity() || 0);
-          // Scale marquee animation speed with scroll velocity
-          const speedMultiplier = Math.min(3.5, 1 + velocity / 900);
-          if (trackRef.current) {
-            trackRef.current.style.animationDuration = `${Math.max(7, 24 / speedMultiplier)}s`;
-          }
+          const velocity = self.getVelocity() || 0;
+          const targetSkew = Math.max(-2.5, Math.min(2.5, -velocity / 650));
+          gsap.to(trackRef.current, {
+            skewX: targetSkew,
+            duration: 0.35,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
         },
       });
 

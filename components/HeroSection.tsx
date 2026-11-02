@@ -15,6 +15,7 @@ export default function HeroSection() {
   const line1Ref = useRef<HTMLSpanElement>(null);
   const dividerLineRef = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -89,17 +90,19 @@ export default function HeroSection() {
         delay: 0.3,
       });
 
-      // 3. Playful Scroll-linked Parallax & Starburst Spin (applied to OUTER refs)
-      gsap.to([line1Ref.current, dividerLineRef.current, line2Ref.current], {
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 0.8,
-        },
-        y: -70,
-        ease: "none",
-      });
+      // 3. Playful Scroll-linked Parallax & Starburst Spin (applied to container and outer refs)
+      if (heroContentRef.current) {
+        gsap.to(heroContentRef.current, {
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.8,
+          },
+          y: -80,
+          ease: "none",
+        });
+      }
 
       gsap.to(starburstLeftRef.current, {
         scrollTrigger: {
@@ -188,7 +191,10 @@ export default function HeroSection() {
       </div>
 
       {/* Center Hero Typography & Badges */}
-      <div className="relative z-10 w-full max-w-[920px] mx-auto px-6 mb-24 md:mb-28 flex flex-col items-center">
+      <div
+        ref={heroContentRef}
+        className="relative z-10 w-full max-w-[920px] mx-auto px-6 mb-24 md:mb-28 flex flex-col items-center will-change-transform"
+      >
         <div className="relative w-full flex flex-col items-center">
           {/* Left Decorative Starburst */}
           <div

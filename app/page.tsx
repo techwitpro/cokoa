@@ -39,7 +39,7 @@ export default function Home() {
         {/* Navigation Header */}
         <Navbar
           isMenuOpen={isMenuOpen}
-          onOpenMenu={() => setIsMenuOpen(true)}
+          onOpenMenu={() => setIsMenuOpen((prev) => !prev)}
           onBookTable={() => handleBookTable()}
         />
 

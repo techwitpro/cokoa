@@ -14,6 +14,7 @@ export default function MomentGallerySection() {
   const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
   const card3Ref = useRef<HTMLDivElement>(null);
+  const galleryTrackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -86,17 +87,16 @@ export default function MomentGallerySection() {
         );
       });
 
-      // Subtle scroll scrub spreading
-      const validCardEls = [card0Ref.current, card1Ref.current, card2Ref.current, card3Ref.current].filter(Boolean);
-      if (validCardEls.length > 0) {
-        gsap.to(validCardEls, {
+      // Subtle scroll scrub on the gallery track container (leaves individual card rotations/transforms clean)
+      if (galleryTrackRef.current) {
+        gsap.to(galleryTrackRef.current, {
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 70%",
-            end: "bottom 30%",
+            start: "top 75%",
+            end: "bottom 25%",
             scrub: 1.0,
           },
-          y: -20,
+          y: -30,
           ease: "none",
         });
       }
@@ -164,7 +164,10 @@ export default function MomentGallerySection() {
       {/* Fanned Overlapping Photo Gallery spanning full viewport width edge-to-edge matching Figma (-151px overlap) */}
       <div className="w-full overflow-hidden py-6">
         <div className="w-screen relative left-1/2 -translate-x-1/2 flex items-center justify-center">
-          <div className="flex items-center justify-center min-w-[1100px] lg:min-w-[1530px] -space-x-16 sm:-space-x-24 md:-space-x-32 lg:-space-x-[151px] px-8">
+          <div
+            ref={galleryTrackRef}
+            className="flex items-center justify-center min-w-[1100px] lg:min-w-[1530px] -space-x-16 sm:-space-x-24 md:-space-x-32 lg:-space-x-[151px] px-8 will-change-transform"
+          >
             {galleryItems.map((item, idx) => (
               <div
                 key={idx}

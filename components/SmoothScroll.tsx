@@ -33,6 +33,9 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     gsap.ticker.add(updateTicker);
     gsap.ticker.lagSmoothing(0);
 
+    // Expose lenis globally for interactive programmatic scrolling (MenuDrawer, Navbar, CTAs)
+    (window as any).lenis = lenis;
+
     // Refresh ScrollTrigger when DOM assets finish loading
     const refreshTrigger = () => {
       ScrollTrigger.refresh();
@@ -42,6 +45,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     const timer = setTimeout(refreshTrigger, 250);
 
     return () => {
+      delete (window as any).lenis;
       window.removeEventListener("load", refreshTrigger);
       clearTimeout(timer);
       gsap.ticker.remove(updateTicker);

@@ -63,50 +63,28 @@ export default function LovedDishesSection({ onBookTable }: LovedDishesProps) {
         }
       );
 
-      // 2. 6 Dish Cards Playful Domino Spring Entrance (divided into rows for responsive viewport awareness)
+      // 2. 6 Dish Cards Playful Spring Domino Entrance (individual responsive viewport awareness)
       const validCards = cardsRef.current.filter(Boolean);
-      const row1 = validCards.slice(0, 3);
-      const row2 = validCards.slice(3, 6);
-
-      if (row1.length > 0) {
+      validCards.forEach((card, idx) => {
+        if (!card) return;
         gsap.fromTo(
-          row1,
-          { y: 35, opacity: 0, scale: 0.95 },
+          card,
+          { y: 40, opacity: 0, scale: 0.95 },
           {
             scrollTrigger: {
-              trigger: row1[0],
-              start: "top 92%",
+              trigger: card,
+              start: "top 88%",
               once: true,
             },
             y: 0,
             opacity: 1,
             scale: 1,
             duration: 0.65,
-            stagger: 0.08,
+            delay: (idx % 3) * 0.08,
             ease: "back.out(1.4)",
           }
         );
-      }
-
-      if (row2.length > 0) {
-        gsap.fromTo(
-          row2,
-          { y: 35, opacity: 0, scale: 0.95 },
-          {
-            scrollTrigger: {
-              trigger: row2[0],
-              start: "top 92%",
-              once: true,
-            },
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.65,
-            stagger: 0.08,
-            ease: "back.out(1.4)",
-          }
-        );
-      }
+      });
     }, sectionRef);
 
     return () => ctx.revert();

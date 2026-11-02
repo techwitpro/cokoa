@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { X, Award, Heart, Utensils } from "lucide-react";
+import { X, Award, Heart, Utensils, Sparkles } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -15,6 +15,7 @@ export default function AboutSection() {
   const dividerTopRef = useRef<HTMLDivElement>(null);
   const dividerBottomRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
+  const cardsTrackRef = useRef<HTMLDivElement>(null);
   const capsule0Ref = useRef<HTMLDivElement>(null);
   const capsule1Ref = useRef<HTMLDivElement>(null);
   const capsule2Ref = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ export default function AboutSection() {
       const headTl = gsap.timeline({
         scrollTrigger: {
           trigger: headingRef.current,
-          start: "top 92%",
+          start: "top 88%",
           once: true,
         },
       });
@@ -48,106 +49,66 @@ export default function AboutSection() {
       headTl
         .fromTo(
           headingRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.65, ease: "power3.out" }
+          { y: 35, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }
         )
         .fromTo(
           [pill1Ref.current, pill2Ref.current],
-          { scale: 0, rotation: -10, opacity: 0 },
+          { scale: 0, rotation: -12, opacity: 0 },
           { scale: 1, rotation: 0, opacity: 1, duration: 0.55, stagger: 0.1, ease: "back.out(2.0)" },
           "-=0.4"
         )
         .fromTo(
           [dividerTopRef.current, dividerBottomRef.current],
           { scaleX: 0, opacity: 0 },
-          { scaleX: 1, opacity: 1, duration: 0.5, stagger: 0.06, ease: "power2.out" },
+          { scaleX: 1, opacity: 1, duration: 0.5, stagger: 0.08, ease: "power2.out" },
           "-=0.25"
         )
         .fromTo(
           buttonRef.current,
-          { y: 15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" },
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
           "-=0.2"
         );
 
-      // 2. 3 Arched Capsules Playful Spring Entrance
-      if (capsule0Ref.current && capsule1Ref.current && capsule2Ref.current) {
+      // 2. 3 Stadium Arch Capsules Fluid Entrance
+      const capsules = [capsule0Ref.current, capsule1Ref.current, capsule2Ref.current].filter(Boolean);
+      if (capsules.length > 0) {
         gsap.fromTo(
-          capsule0Ref.current,
-          { y: 45, opacity: 0, rotateZ: -2.5, scale: 0.95 },
+          capsules,
+          { y: 60, opacity: 0, scale: 0.94 },
           {
             scrollTrigger: {
-              trigger: capsule0Ref.current,
-              start: "top 92%",
-              once: true,
-            },
-            y: 0,
-            opacity: 1,
-            rotateZ: 0,
-            scale: 1,
-            duration: 0.75,
-            ease: "back.out(1.5)",
-          }
-        );
-
-        gsap.fromTo(
-          capsule1Ref.current,
-          { y: 50, opacity: 0, scale: 0.93 },
-          {
-            scrollTrigger: {
-              trigger: capsule1Ref.current,
-              start: "top 92%",
+              trigger: cardsTrackRef.current,
+              start: "top 85%",
               once: true,
             },
             y: 0,
             opacity: 1,
             scale: 1,
-            duration: 0.75,
-            delay: 0.08,
-            ease: "back.out(1.6)",
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out",
           }
         );
 
-        gsap.fromTo(
-          capsule2Ref.current,
-          { y: 45, opacity: 0, rotateZ: 2.5, scale: 0.95 },
-          {
-            scrollTrigger: {
-              trigger: capsule2Ref.current,
-              start: "top 92%",
-              once: true,
-            },
-            y: 0,
-            opacity: 1,
-            rotateZ: 0,
-            scale: 1,
-            duration: 0.75,
-            delay: 0.16,
-            ease: "back.out(1.5)",
-          }
-        );
-        // Scroll-linked subtle parallax depth scrub across the arches
-        gsap.to([capsule0Ref.current, capsule2Ref.current], {
-          scrollTrigger: {
-            trigger: capsule1Ref.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            scrub: 1.0,
-          },
-          y: -25,
-          ease: "none",
-        });
-
-        gsap.to(capsule1Ref.current, {
-          scrollTrigger: {
-            trigger: capsule1Ref.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            scrub: 1.2,
-          },
-          y: -45,
-          ease: "none",
-        });
+        // 3. Smooth Scroll-Linked Horizontal Panoramic Drift (matching Figma x=-349px offset)
+        if (cardsTrackRef.current) {
+          gsap.fromTo(
+            cardsTrackRef.current,
+            { x: 50 },
+            {
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1.0,
+              },
+              x: -90,
+              ease: "none",
+            }
+          );
+        }
       }
     }, sectionRef);
 
@@ -158,20 +119,17 @@ export default function AboutSection() {
     {
       ref: capsule0Ref,
       src: "/images/about_image_1_6668_468-3a9639.png",
-      alt: "Chef delicately plating handmade fresh pasta at COKOA",
-      caption: "Handmade Artisanal Pasta",
+      alt: "Chef passionately crafting handmade artisanal pasta at COKOA",
     },
     {
       ref: capsule1Ref,
       src: "/images/about_image_2_6668_469.png",
-      alt: "Culinary chef finishing signature grilled burger with fresh garnish",
-      caption: "Culinary Passion & Craft",
+      alt: "Delighted guest enjoying dinner and warm hospitality at COKOA",
     },
     {
       ref: capsule2Ref,
       src: "/images/about_image_3_6668_470.png",
-      alt: "Dining room atmosphere with table wine and cozy evening seating",
-      caption: "Inviting Dining Space",
+      alt: "Crispy golden fried gourmet chicken specialty dish fresh from kitchen",
     },
   ];
 
@@ -180,7 +138,7 @@ export default function AboutSection() {
       ref={sectionRef}
       id="about"
       aria-label="About COKOA"
-      className="relative w-full bg-white pt-20 md:pt-28 pb-16 md:pb-24 overflow-hidden"
+      className="relative w-full bg-white pt-20 md:pt-28 pb-16 md:pb-24 overflow-x-clip overflow-y-visible"
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col items-center">
         {/* Main Heading with Inline Image Pills matching Figma */}
@@ -277,30 +235,32 @@ export default function AboutSection() {
         </div>
       </div>
 
-      {/* 3 Arched Pill Images Gallery spanning full viewport width edge-to-edge matching Figma (Container #6668:466 & #6668:467 at x=-349px) */}
-      <div className="w-full mt-16 md:mt-24 overflow-hidden">
-        <div className="w-screen relative left-1/2 -translate-x-1/2 flex items-center justify-center">
-          <div className="flex items-center justify-center min-w-[1100px] lg:min-w-[1860px] flex-shrink-0">
+      {/* 3 Arched Pill Images Gallery matching Figma specs (Container #6668:466 & #6668:467 at x=-349px, borderRadius: 680px, borderless) */}
+      <div className="w-full mt-16 md:mt-24 overflow-visible">
+        <div className="w-full flex items-center justify-center">
+          <div
+            ref={cardsTrackRef}
+            className="group/track flex items-center justify-center min-w-[1050px] lg:min-w-[1860px] flex-shrink-0 cursor-pointer will-change-transform"
+          >
             {images.map((img, idx) => (
               <div
                 key={idx}
                 ref={img.ref}
-                className="flex-shrink-0 will-change-transform"
+                onClick={() => setShowStoryModal(true)}
+                className="flex-shrink-0 will-change-transform group/card transition-opacity duration-300 group-hover/track:opacity-90 hover:!opacity-100"
               >
-                <div className="group relative w-[360px] sm:w-[460px] md:w-[540px] lg:w-[620px] h-[520px] sm:h-[620px] md:h-[690px] lg:h-[740px] rounded-[680px] overflow-hidden border-2 border-[#100B14]/15 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+                {/* Borderless Stadium Capsule matching Figma node dimensions (w: 620px, h: 740px, borderRadius: 680px) */}
+                <div className="relative w-[340px] sm:w-[440px] md:w-[520px] lg:w-[620px] h-[500px] sm:h-[600px] md:h-[680px] lg:h-[740px] rounded-[680px] overflow-hidden select-none transition-all duration-500 hover:shadow-[0_24px_60px_rgba(16,11,20,0.22)] hover:-translate-y-2">
                   <Image
                     src={img.src}
                     alt={img.alt}
                     fill
-                    sizes="(max-width: 768px) 460px, 620px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 440px, 620px"
+                    className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-106"
+                    priority={idx === 1}
                   />
-                  {/* Floating caption on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-12 px-6">
-                    <span className="font-nunito font-bold text-white text-base sm:text-lg bg-[#100B14]/85 px-5 py-2 rounded-full backdrop-blur-sm border border-white/20 shadow-md">
-                      {img.caption}
-                    </span>
-                  </div>
+                  {/* Subtle soft vignette highlight on hover */}
+                  <div className="absolute inset-0 bg-black/0 group-hover/card:bg-black/10 transition-colors duration-300 pointer-events-none" />
                 </div>
               </div>
             ))}
@@ -333,35 +293,37 @@ export default function AboutSection() {
             <span className="inline-block px-3.5 py-1 rounded-full bg-[#F6E8FA] text-[#632C91] font-nunito font-bold text-xs uppercase tracking-wider mb-3">
               Our Heritage & Philosophy
             </span>
-            <h3 id="about-modal-title" className="font-ranchers text-3xl sm:text-4xl text-[#100B14] mb-4">
-              Crafting Unforgettable Flavors Since 2018
+            <h3
+              id="about-modal-title"
+              className="font-ranchers text-3xl sm:text-4xl text-[#100B14] uppercase tracking-wide mb-6"
+            >
+              Crafting Memories Through Every Flavor
             </h3>
 
-            <div className="space-y-4 font-nunito text-[#100B14]/80 text-base leading-relaxed">
+            <div className="space-y-4 font-nunito text-base text-[#100B14]/80 leading-relaxed">
               <p>
-                At COKOA, dining is a shared ritual of warmth, laughter, and sensorial discovery.
-                From our open-fire ovens to handmade pasta pressed fresh each dawn, our culinary team sources locally and crafts passionately.
+                Founded on the belief that dining is an art of connection, COKOA merges centuries-old culinary traditions with modern gourmet ingenuity. Every recipe begins with locally sourced, seasonal ingredients harvested at peak freshness.
               </p>
               <p>
-                Every recipe is an homage to classic comfort elevated by modern European flair. Whether you are gathering for an intimate anniversary, an upbeat acoustic jazz evening, or a sunlit weekend brunch with friends, our table is always set for you.
+                From our 800°F wood-fired hearth to our slow-simmered artisanal reductions, our kitchen is governed by passion, precision, and an unrelenting dedication to culinary excellence.
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-100">
-              <div className="text-center p-3 rounded-2xl bg-[#FFEFCB]/50">
-                <Utensils className="w-6 h-6 text-[#F9A70A] mx-auto mb-1" aria-hidden="true" />
-                <p className="font-ranchers text-2xl text-[#100B14]">100%</p>
-                <p className="font-nunito text-xs text-gray-600">Fresh Local Ingredients</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-100">
+              <div className="flex flex-col items-center text-center p-4 bg-[#F6E8FA] rounded-2xl">
+                <Award className="w-7 h-7 text-[#632C91] mb-2" />
+                <span className="font-ranchers text-xl text-[#100B14]">Michelin Guide</span>
+                <span className="font-nunito text-xs text-gray-600 mt-0.5">Selected 2024</span>
               </div>
-              <div className="text-center p-3 rounded-2xl bg-[#F6E8FA]/50">
-                <Heart className="w-6 h-6 text-[#632C91] mx-auto mb-1" aria-hidden="true" />
-                <p className="font-ranchers text-2xl text-[#100B14]">4.9 ★</p>
-                <p className="font-nunito text-xs text-gray-600">Over 3,000+ Reviews</p>
+              <div className="flex flex-col items-center text-center p-4 bg-[#FFEFCB] rounded-2xl">
+                <Heart className="w-7 h-7 text-[#F9A70A] mb-2" />
+                <span className="font-ranchers text-xl text-[#100B14]">100% Organic</span>
+                <span className="font-nunito text-xs text-gray-600 mt-0.5">Farm-to-Table</span>
               </div>
-              <div className="text-center p-3 rounded-2xl bg-[#D3F36A]/20">
-                <Award className="w-6 h-6 text-[#100B14] mx-auto mb-1" aria-hidden="true" />
-                <p className="font-ranchers text-2xl text-[#100B14]">2024</p>
-                <p className="font-nunito text-xs text-gray-600">Culinary Excellence</p>
+              <div className="flex flex-col items-center text-center p-4 bg-[#D3F36A]/30 rounded-2xl">
+                <Utensils className="w-7 h-7 text-[#100B14] mb-2" />
+                <span className="font-ranchers text-xl text-[#100B14]">Artisanal Daily</span>
+                <span className="font-nunito text-xs text-gray-600 mt-0.5">Scratch Kitchen</span>
               </div>
             </div>
           </div>
